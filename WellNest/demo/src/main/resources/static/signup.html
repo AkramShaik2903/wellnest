@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WellNest Sign Up</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="card page-flip">
+
+            <h2 class="title">Create Account</h2>
+            <p class="subtitle">Join WellNest and start your journey</p>
+
+            <form>
+
+                <label>Email Address</label>
+                <input type="email" placeholder="Enter your email" required>
+
+                <label>Password</label>
+                <input type="password" placeholder="Enter password" required>
+
+                <label>Confirm Password</label>
+                <input type="password" placeholder="Re-enter password" required>
+
+                <label>Select Role</label>
+
+                <!-- Role Buttons -->
+                <div class="role-container">
+                    <label class="role-option">
+                        <input type="radio" name="role" value="USER" required>
+                        <span>User</span>
+                    </label>
+
+                    <label class="role-option">
+                        <input type="radio" name="role" value="TRAINER" required>
+                        <span>Trainer</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn">Create Account</button>
+
+                <p class="signup-text">
+                    Already have an account? <a href="login.html">Login</a>
+                </p>
+
+            </form>
+
+        </div>
+    </div>
+    <script>
+document.querySelector("form").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const email = document.querySelector("input[type='email']").value;
+    const password = document.querySelector("input[placeholder='Enter password']").value;
+    const confirmPassword = document.querySelector("input[placeholder='Re-enter password']").value;
+
+    const role = document.querySelector("input[name='role']:checked").value;
+
+    const res = await fetch("http://localhost:8080/api/auth/signup", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ email, password, confirmPassword, role })
+    });
+
+    const result = await res.json();
+
+    if (result.success) {
+        alert("Account created!");
+        window.location.href = "login.html";
+    } else {
+        alert(result.message);
+    }
+});
+</script>
+
+</body>
+</html>

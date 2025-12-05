@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Tracker - WellNest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%);
+            font-family: "Poppins", sans-serif;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.03)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.02)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 450px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .top-nav {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .nav-btn {
+            flex: 1;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(20px);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(45deg, #fff, #f0fdf4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .date-display {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+
+        .calorie-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(25px);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calorie-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981, #059669, #10b981);
+            background-size: 200% 100%;
+            animation: shimmer 2s infinite;
+        }
+
+        .daily-goal {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #10b981, #059669);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .remaining-cal {
+            color: #6b7280;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .progress-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669, #10b981);
+            border-radius: 12px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: progressShine 2s infinite;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #374151;
+            margin-top: 8px;
+        }
+
+        .search-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(25px);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255,255,255,0.2);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 20px 20px 20px 60px;
+            border: 2px solid #e5e7eb;
+            border-radius: 20px;
+            font-size: 1.1rem;
+            background: white;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #10b981;
+            font-size: 1.3rem;
+            z-index: 2;
+        }
+
+        .search-results {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+
+        .food-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 20px;
+            background: #f8fafc;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .food-item:hover {
+            background: #e0f2fe;
+            transform: translateX(5px);
+            border-color: #10b981;
+        }
+
+        .food-item.selected {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-color: #10b981;
+        }
+
+        .food-info h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .food-nutrition {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .food-calories {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .food-item.selected .food-nutrition {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .add-food-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 15px;
+        }
+
+        .add-food-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(16, 185, 129, 0.4);
+        }
+
+        .meals-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(25px);
+            border-radius: 24px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .meals-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .meals-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .total-meals {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .meal-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: #f8fafc;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #10b981;
+        }
+
+        .meal-info h4 {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .meal-time {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .meal-calories {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        @keyframes progressShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-nav">
+            <a href="user-home.html" class="nav-btn">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="user-profile.html" class="nav-btn">
+                <i class="fas fa-user"></i> Profile
+            </a>
+            <a href="workout-tracking.html" class="nav-btn">
+                <i class="fas fa-dumbbell"></i> Workout
+            </a>
+        </div>
+
+        <div class="header">
+            <h1><i class="fas fa-utensils"></i> Track Food</h1>
+            <div class="date-display" id="currentDate"></div>
+        </div>
+
+        <div class="calorie-card" id="calorieCard">
+            <div class="daily-goal" id="dailyGoal">2000</div>
+            <div class="remaining-cal" id="remainingCal">kcal remaining</div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="consumedCal">0</span>
+                    <span id="totalGoal">2000</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-section">
+            <div class="search-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" id="foodSearch" 
+                       placeholder="Search any food item... (chicken, rice, roti, etc)">
+            </div>
+            
+            <div id="searchResults" class="search-results"></div>
+            
+            <button id="addFoodBtn" class="add-food-btn" style="display: none;" onclick="addSelectedFood()">
+                <i class="fas fa-plus"></i> Add to Meals
+            </button>
+        </div>
+
+        <div class="meals-section">
+            <div class="meals-header">
+                <div>
+                    <div class="meals-title">Today's Meals</div>
+                    <div class="total-meals" id="totalMeals">0 meals • 0 kcal</div>
+                </div>
+            </div>
+            <div id="mealsList"></div>
+        </div>
+    </div>
+
+    <script>
+        let todayMeals = [];
+        let dailyCalorieGoal = 2000;
+        let userProfile = null;
+        let selectedFood = null;
+
+        // Backend API base URL
+        const API_BASE = 'http://localhost:8080/api';
+
+        // Initialize date display
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Load user profile
+        async function loadUserProfile() {
+            try {
+                const email = localStorage.getItem("userEmail");
+                if (email) {
+                    const res = await fetch(`${API_BASE}/user/details?email=${email}`);
+                    userProfile = await res.json();
+                    calculateDailyCalories();
+                }
+            } catch (err) {
+                console.error('Profile load error:', err);
+            }
+        }
+
+        // Calculate BMR-based calories
+        function calculateBMR() {
+            if (!userProfile || !userProfile.age || !userProfile.weight || !userProfile.height) return 2000;
+            
+            const age = parseInt(userProfile.age);
+            const weight = parseFloat(userProfile.weight);
+            const height = parseFloat(userProfile.height);
+            const goal = userProfile.goal || 'MAINTAIN';
+
+            let bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+            const activityMultiplier = 1.2; // Sedentary
+            const maintenance = bmr * activityMultiplier;
+
+            if (goal === 'LOSE') return Math.round(maintenance - 500);
+            if (goal === 'GAIN') return Math.round(maintenance + 500);
+            return Math.round(maintenance);
+        }
+
+        function calculateDailyCalories() {
+            dailyCalorieGoal = calculateBMR();
+            document.getElementById('dailyGoal').innerText = dailyCalorieGoal + ' kcal';
+            document.getElementById('totalGoal').innerText = dailyCalorieGoal;
+            updateCalorieDisplay();
+        }
+
+        // USDA Backend Search functionality
+        document.getElementById('foodSearch').addEventListener('input', async function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            if (query.length < 2) {
+                document.getElementById('searchResults').innerHTML = '';
+                document.getElementById('addFoodBtn').style.display = 'none';
+                selectedFood = null;
+                return;
+            }
+
+            // Show loading
+            document.getElementById('searchResults').innerHTML = 
+                '<div style="padding: 20px; text-align: center; color: #6b7280;">Searching...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE}/foods/search?query=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                console.log('Backend response:', data); // Debug log
+
+                if (data.error) {
+                    document.getElementById('searchResults').innerHTML = 
+                        '<div style="padding: 20px; text-align: center; color: #6b7280;">Food not found</div>';
+                    return;
+                }
+
+                const foodItem = extractNutritionData(data);
+                if (foodItem) {
+                    displaySearchResults([foodItem]);
+                } else {
+                    document.getElementById('searchResults').innerHTML = 
+                        '<div style="padding: 20px; text-align: center; color: #6b7280;">No nutrition data available</div>';
+                }
+            } catch (error) {
+                console.error('Search error:', error);
+                document.getElementById('searchResults').innerHTML = 
+                    '<div style="padding: 20px; text-align: center; color: #ef4444;">Search failed. Please try again.</div>';
+            }
+        });
+
+        // Extract nutrition from USDA API response
+        function extractNutritionData(usdaData) {
+            try {
+                const foodNutrients = usdaData.foodNutrients || [];
+
+                const findNutrient = (name) => foodNutrients.find(n =>
+                    n.nutrientName.toLowerCase().includes(name.toLowerCase())
+                );
+
+                const energy = findNutrient('Energy') || findNutrient('kcal');
+                const protein = findNutrient('Protein');
+                const carbs = findNutrient('Carbohydrate');
+                const fat = findNutrient('Fat') || findNutrient('Lipid');
+
+                const calories = energy ? Math.round(energy.amount) : 0;
+                const protAmount = protein ? Math.round(protein.amount) : 0;
+                const carbAmount = carbs ? Math.round(carbs.amount) : 0;
+                const fatAmount = fat ? Math.round(fat.amount) : 0;
+
+                console.log('Extracted nutrients:', { calories, protAmount, carbAmount, fatAmount }); // Debug log
+
+                if (calories === 0) return null;
+
+                return {
+                    name: usdaData.description || 'Unknown Food',
+                    calories: calories,
+                    protein: `${protAmount}g`,
+                    carbs: `${carbAmount}g`,
+                    fat: `${fatAmount}g`
+                };
+            } catch (e) {
+                console.error('Nutrition extraction error:', e);
+                return null;
+            }
+        }
+
+        function displaySearchResults(foods) {
+            const resultsHtml = foods.map(food => `
+                <div class="food-item ${selectedFood?.name === food.name ? 'selected' : ''}"
+                     onclick="selectFood('${food.name.replace(/'/g, "\\'")}', ${food.calories}, '${food.protein}', '${food.carbs}', '${food.fat}')">
+                    <div class="food-info">
+                        <h4>${food.name}</h4>
+                        <div class="food-nutrition">
+                            Protein: ${food.protein} | Carbs: ${food.carbs} | Fat: ${food.fat}
+                        </div>
+                    </div>
+                    <div class="food-calories">${food.calories} kcal</div>
+                </div>
+            `).join('');
+
+            document.getElementById('searchResults').innerHTML = resultsHtml;
+        }
+
+        function selectFood(name, calories, protein, carbs, fat) {
+            selectedFood = { name, calories, protein, carbs, fat };
+            document.querySelectorAll('.food-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            document.getElementById('addFoodBtn').style.display = 'flex';
+        }
+
+        function addSelectedFood() {
+            if (selectedFood) {
+                todayMeals.push({
+                    id: Date.now(),
+                    name: selectedFood.name,
+                    calories: selectedFood.calories,
+                    protein: selectedFood.protein,
+                    carbs: selectedFood.carbs,
+                    fat: selectedFood.fat,
+                    time: new Date().getTime()
+                });
+                saveTodayMeals();
+                renderMeals();
+                updateCalorieDisplay();
+                
+                // Reset search
+                document.getElementById('foodSearch').value = '';
+                document.getElementById('searchResults').innerHTML = '';
+                document.getElementById('addFoodBtn').style.display = 'none';
+                selectedFood = null;
+            }
+        }
+
+        function loadTodayMeals() {
+            const today = new Date().toDateString();
+            const saved = localStorage.getItem(`meals_${today}`);
+            if (saved) {
+                todayMeals = JSON.parse(saved);
+                renderMeals();
+                updateCalorieDisplay();
+            }
+        }
+
+        function saveTodayMeals() {
+            const today = new Date().toDateString();
+            localStorage.setItem(`meals_${today}`, JSON.stringify(todayMeals));
+        }
+
+        function updateCalorieDisplay() {
+            const totalConsumed = todayMeals.reduce((sum, meal) => sum + meal.calories, 0);
+            const remaining = dailyCalorieGoal - totalConsumed;
+            const percentage = Math.max(0, Math.min(100, (totalConsumed / dailyCalorieGoal) * 100));
+
+            document.getElementById('consumedCal').innerText = totalConsumed;
+            document.getElementById('totalGoal').innerText = dailyCalorieGoal;
+            document.getElementById('remainingCal').innerText = `${remaining} kcal remaining`;
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('totalMeals').innerText = `${todayMeals.length} meals • ${totalConsumed} kcal`;
+
+            if (remaining < 0) {
+                document.getElementById('remainingCal').innerText = 'Goal exceeded!';
+                document.getElementById('remainingCal').style.color = '#ef4444';
+            } else {
+                document.getElementById('remainingCal').style.color = '#6b7280';
+            }
+        }
+
+        function renderMeals() {
+            const mealsList = document.getElementById('mealsList');
+            if (todayMeals.length === 0) {
+                mealsList.innerHTML = `
+                    <div style="text-align: center; padding: 50px 20px; color: #6b7280;">
+                        <i class="fas fa-utensils" style="font-size: 4rem; margin-bottom: 20px; opacity: 0.5;"></i>
+                        <h3 style="color: #374151; margin-bottom: 10px;">No meals tracked yet</h3>
+                        <p>Search and add your meals above to start tracking</p>
+                    </div>
+                `;
+                return;
+            }
+
+            mealsList.innerHTML = todayMeals.map((meal, index) => `
+                <div class="meal-item">
+                    <div class="meal-info">
+                        <h4>${meal.name}</h4>
+                        <div class="meal-time">
+                            ${new Date(meal.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                            <span style="margin-left: 12px; font-size: 0.8rem; opacity: 0.7;">
+                                P:${meal.protein} C:${meal.carbs} F:${meal.fat}
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="meal-calories">${meal.calories} kcal</div>
+                        <button onclick="removeMeal(${index})" style="background: #ef4444; color: white; border: none; border-radius: 8px; padding: 8px 12px; cursor: pointer; margin-top: 8px; font-size: 0.8rem;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function removeMeal(index) {
+            todayMeals.splice(index, 1);
+            saveTodayMeals();
+            renderMeals();
+            updateCalorieDisplay();
+        }
+
+        // Enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && selectedFood) {
+                addSelectedFood();
+            }
+        });
+
+        // Initialize app
+        loadUserProfile();
+        loadTodayMeals();
+    </script>
+</body>
+</html>

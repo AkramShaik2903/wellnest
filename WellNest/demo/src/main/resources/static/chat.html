@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - WellNest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            font-family: "Poppins", sans-serif;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .top-nav {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(20px);
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            gap: 15px;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            padding: 14px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .nav-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+        
+        .chat-container {
+            flex: 1;
+            background: rgba(255,255,255,0.95);
+            border-radius: 28px;
+            padding: 0;
+            backdrop-filter: blur(25px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 30px 70px rgba(0,0,0,0.2);
+        }
+        
+        .chat-header {
+            padding: 25px 30px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .chat-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+        
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .message {
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 20px;
+            position: relative;
+        }
+        
+        .message.sent {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 8px;
+        }
+        
+        .message.received {
+            background: #f1f5f9;
+            color: #1f2937;
+            align-self: flex-start;
+            border-bottom-left-radius: 8px;
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        
+        .message-input {
+            padding: 25px 30px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+        }
+        
+        .message-field {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 25px;
+            font-size: 1rem;
+            resize: none;
+            max-height: 120px;
+            transition: all 0.3s ease;
+        }
+        
+        .message-field:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 4px rgba(16,185,129,0.1);
+        }
+        
+        .send-btn {
+            width: 55px;
+            height: 55px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .send-btn:hover { transform: scale(1.1); }
+        
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .chat-container { border-radius: 20px; margin: 10px; }
+            .message { max-width: 85%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-nav">
+        <a href="trainer-dashboard.html" class="nav-btn">
+            <i class="fas fa-arrow-left"></i> Dashboard
+        </a>
+        <a href="add-client.html" class="nav-btn">
+            <i class="fas fa-user-plus"></i> Clients
+        </a>
+    </div>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="chat-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div>
+                    <div style="font-weight: 600; font-size: 1.1rem;">Alex Johnson</div>
+                    <div style="font-size: 0.9rem; opacity: 0.8;">Online</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;">
+                    <i class="fas fa-phone"></i>
+                </button>
+                <button style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;">
+                    <i class="fas fa-video"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="message received">
+                Hi coach! Just finished my workout 💪 How was my form on those squats?
+                <div class="message-time">10:30 AM</div>
+            </div>
+            <div class="message sent">
+                Looking great Alex! Your squat form is improving every week. Keep that chest up and focus on depth. Try adding 2.5kg next session!
+                <div class="message-time">10:32 AM</div>
+            </div>
+            <div class="message received">
+                Awesome! Feeling stronger already. Should I increase my protein to 150g daily?
+                <div class="message-time">10:35 AM</div>
+            </div>
+        </div>
+
+        <div class="message-input">
+            <textarea class="message-field" id="messageField" placeholder="Type your message..."></textarea>
+            <button class="send-btn" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const messageField = document.getElementById('messageField');
+        const chatMessages = document.getElementById('chatMessages');
+
+        function sendMessage() {
+            const message = messageField.value.trim();
+            if (!message) return;
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message sent';
+            messageDiv.innerHTML = `
+                ${message}
+                <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            messageField.value = '';
+            
+            // Simulate reply
+            setTimeout(() => {
+                const replyDiv = document.createElement('div');
+                replyDiv.className = 'message received';
+                replyDiv.innerHTML = `
+                    Great question! Yes, aim for 150g protein. Add a shake after workout.
+                    <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</div>
+                `;
+                chatMessages.appendChild(replyDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1500);
+        }
+
+        messageField.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        messageField.addEventListener('input', () => {
+            messageField.style.height = 'auto';
+            messageField.style.height = Math.min(messageField.scrollHeight, 120) + 'px';
+        });
+    </script>
+</body>
+</html>

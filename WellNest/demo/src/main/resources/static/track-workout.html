@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Workout Tracker - WellNest</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --text:#0f172a;
+      --accent:#2563eb;
+      --success:#10b981;
+      --radius:12px;
+      --shadow:0 10px 30px rgba(16,24,40,0.06);
+      --max-width:980px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+      background:linear-gradient(180deg,#f8fafc 0%,#eef3fb 100%);
+      color:var(--text);
+      padding:28px;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      min-height:100vh;
+    }
+
+    .wrap{width:100%;max-width:var(--max-width)}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}
+    .logo{
+      width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(180deg,#fff,#f1f7ff);
+      border:1px solid rgba(37,99,235,0.06);
+      color:var(--accent);
+      font-weight:700;font-size:1.05rem;
+      box-shadow:0 6px 16px rgba(16,24,40,0.04);
+    }
+    .brand .title{font-weight:700;font-size:1.02rem}
+    .brand .sub{font-size:0.78rem;color:var(--muted)}
+
+    .top-actions{display:flex;gap:10px;align-items:center}
+
+    .logout-btn{
+      background:var(--card);
+      border:1px solid rgba(15,23,42,0.06);
+      padding:10px 14px;
+      border-radius:10px;
+      font-weight:600;
+      color:var(--text);
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      cursor:pointer;
+      box-shadow:0 4px 12px rgba(16,24,40,0.03);
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px;
+      border:1px solid rgba(15,23,42,0.04)
+    }
+
+    .header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:14px}
+    .title{font-size:1.25rem;font-weight:700}
+    .sub{color:var(--muted);font-size:0.95rem}
+
+    .totals{
+      display:flex;gap:12px;align-items:center;
+      background:linear-gradient(90deg,#fff,#fbfdff);
+      padding:10px 14px;border-radius:10px;
+      border:1px solid rgba(15,23,42,0.04);
+      box-shadow:0 8px 20px rgba(16,24,40,0.03);
+    }
+    .totals .label{font-weight:600;color:var(--muted);font-size:0.9rem}
+    .totals .value{font-weight:800;font-size:1.2rem;color:var(--text)}
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;margin-top:16px
+    }
+    @media (max-width:900px){ .grid{grid-template-columns:1fr} }
+
+    .panel{
+      background:#fff;
+      border-radius:12px;
+      padding:16px;
+      border:1px solid rgba(15,23,42,0.03);
+      box-shadow:0 8px 22px rgba(16,24,40,0.03)
+    }
+
+    .panel .panel-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .panel .panel-head h3{font-size:1.05rem;font-weight:700}
+
+    .field{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+    label{font-weight:600;color:#111827;font-size:0.92rem}
+
+    input,select{
+      width:100%;padding:10px 12px;border-radius:8px;
+      border:1px solid #e6eefb;background:transparent;font-size:0.98rem;
+    }
+
+    input:focus,select:focus{
+      outline:none;border-color:var(--accent);
+      box-shadow:0 8px 20px rgba(37,99,235,0.06)
+    }
+
+    .btn{
+      display:inline-flex;align-items:center;gap:10px;padding:10px 12px;
+      border-radius:10px;border:none;
+      background:linear-gradient(90deg,var(--accent),#7c3aed);
+      color:#fff;font-weight:700;cursor:pointer;
+    }
+
+    .btn.ghost{
+      background:transparent;border:1px solid rgba(15,23,42,0.06);color:var(--text)
+    }
+
+    .history{
+      margin-top:12px;max-height:240px;overflow:auto;
+      display:flex;flex-direction:column;gap:8px
+    }
+
+    .history-item{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:10px;border-radius:8px;background:#fbfdff;
+      border:1px solid rgba(15,23,42,0.03)
+    }
+
+    .history-item .meta{color:var(--muted);font-size:0.92rem}
+
+    .history-item button{
+      background:#ef4444;color:#fff;border:none;padding:6px 8px;
+      border-radius:6px;cursor:pointer
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <a class="brand" href="user-home.html">
+        <div class="logo">WN</div>
+        <div>
+          <div class="title">WellNest</div>
+          <div class="sub">Workout Tracker</div>
+        </div>
+      </a>
+
+      <div class="top-actions">
+        <a href="user-home.html" class="logout-btn"><i class="fas fa-home"></i> Home</a>
+
+        <button id="logoutBtn" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN CARD -->
+    <section class="card">
+      <div class="header">
+        <div>
+          <div class="title">Workout & Cardio</div>
+          <div class="sub" id="dateDisplay"></div>
+        </div>
+
+        <div class="totals">
+          <div class="label">Total Calories Burned</div>
+          <div class="value" id="totalCalories">0 kcal</div>
+        </div>
+      </div>
+
+      <div class="grid">
+
+        <!-- WORKOUT PANEL -->
+        <div class="panel">
+          <div class="panel-head"><h3><i class="fas fa-dumbbell"></i> Add Workout</h3></div>
+
+          <div class="field">
+            <label>Exercise Type</label>
+            <select id="workoutType">
+              <option>Weight Training</option>
+              <option>Yoga</option>
+              <option>Cardio</option>
+              <option>HIIT</option>
+              <option>Others</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Duration (minutes)</label>
+            <input id="workoutDuration" type="number" min="0" placeholder="e.g. 30">
+          </div>
+
+          <div class="field">
+            <label>Calories Burned (kcal)</label>
+            <input id="workoutCalories" type="number" min="0" placeholder="e.g. 250">
+          </div>
+
+          <div style="display:flex;gap:10px;">
+            <button class="btn" id="addWorkoutBtn"><i class="fas fa-plus"></i> Add Workout</button>
+            <button class="btn ghost" id="clearWorkoutsBtn">Clear</button>
+          </div>
+
+          <div class="history" id="workoutHistory"></div>
+        </div>
+
+        <!-- CARDIO PANEL -->
+        <div class="panel">
+          <div class="panel-head"><h3><i class="fas fa-heartbeat"></i> Add Cardio</h3></div>
+
+          <div class="field">
+            <label>Activity</label>
+            <select id="cardioType">
+              <option>Running</option>
+              <option>Cycling</option>
+              <option>Swimming</option>
+              <option>Rowing</option>
+              <option>Elliptical</option>
+              <option>Others</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Duration (minutes)</label>
+            <input id="cardioDuration" type="number" min="0" placeholder="e.g. 20">
+          </div>
+
+          <div class="field">
+            <label>Distance (km) — optional</label>
+            <input id="cardioDistance" type="number" min="0" step="0.1" placeholder="e.g. 5.0">
+          </div>
+
+          <div class="field">
+            <label>Calories Burned (kcal)</label>
+            <input id="cardioCalories" type="number" min="0" placeholder="e.g. 300">
+          </div>
+
+          <div style="display:flex;gap:10px;">
+            <button class="btn" id="addCardioBtn"><i class="fas fa-plus"></i> Add Cardio</button>
+            <button class="btn ghost" id="clearCardioBtn">Clear</button>
+          </div>
+
+          <div class="history" id="cardioHistory"></div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+
+  <!-- SCRIPT -->
+  <script>
+    const STORAGE_KEYS = {
+      workouts: 'tracker_workouts',
+      cardio: 'tracker_cardio'
+    };
+
+    const els = {
+      dateDisplay: document.getElementById('dateDisplay'),
+      totalCalories: document.getElementById('totalCalories'),
+      workoutType: document.getElementById('workoutType'),
+      workoutDuration: document.getElementById('workoutDuration'),
+      workoutCalories: document.getElementById('workoutCalories'),
+      workoutHistory: document.getElementById('workoutHistory'),
+      cardioType: document.getElementById('cardioType'),
+      cardioDuration: document.getElementById('cardioDuration'),
+      cardioDistance: document.getElementById('cardioDistance'),
+      cardioCalories: document.getElementById('cardioCalories'),
+      cardioHistory: document.getElementById('cardioHistory'),
+      addWorkoutBtn: document.getElementById('addWorkoutBtn'),
+      addCardioBtn: document.getElementById('addCardioBtn'),
+      clearWorkoutsBtn: document.getElementById('clearWorkoutsBtn'),
+      clearCardioBtn: document.getElementById('clearCardioBtn'),
+      logoutBtn: document.getElementById('logoutBtn')
+    };
+
+    // Set date
+    els.dateDisplay.textContent = new Date().toLocaleDateString('en-IN', {
+      weekday: 'long', year: 'numeric', month: 'short', day: 'numeric'
+    });
+
+
+    function read(key) {
+      try { return JSON.parse(localStorage.getItem(key) || '[]'); }
+      catch { return []; }
+    }
+
+    function write(key, arr) {
+      localStorage.setItem(key, JSON.stringify(arr));
+    }
+
+    function calcTotalCalories() {
+      const workouts = read(STORAGE_KEYS.workouts);
+      const cardios = read(STORAGE_KEYS.cardio);
+      const total = workouts.reduce((s,i)=>s+(i.calories||0),0) + 
+                    cardios.reduce((s,i)=>s+(i.calories||0),0);
+      els.totalCalories.textContent = `${total} kcal`;
+    }
+
+    function renderHistory() {
+      const workouts = read(STORAGE_KEYS.workouts);
+      const cardios = read(STORAGE_KEYS.cardio);
+
+      els.workoutHistory.innerHTML =
+        workouts.length
+        ? workouts.map(i => `
+          <div class="history-item">
+            <div>
+              <div style="font-weight:700">${i.type} — ${i.duration} min</div>
+              <div class="meta">${i.calories} kcal</div>
+            </div>
+            <button onclick="removeEntry('${STORAGE_KEYS.workouts}', ${i.id})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        `).join('')
+        : `<div class="meta">No workouts logged yet.</div>`;
+
+      els.cardioHistory.innerHTML =
+        cardios.length
+        ? cardios.map(i => `
+          <div class="history-item">
+            <div>
+              <div style="font-weight:700">${i.activity} — ${i.duration} min</div>
+              <div class="meta">${i.calories} kcal</div>
+            </div>
+            <button onclick="removeEntry('${STORAGE_KEYS.cardio}', ${i.id})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        `).join('')
+        : `<div class="meta">No cardio logged yet.</div>`;
+
+      calcTotalCalories();
+    }
+
+
+    // ADD WORKOUT
+    els.addWorkoutBtn.addEventListener('click', () => {
+      const type = els.workoutType.value;
+      const duration = Number(els.workoutDuration.value);
+      const calories = Number(els.workoutCalories.value);
+
+      if (!duration || duration <= 0) return alert("Enter valid duration.");
+      if (calories < 0) return alert("Enter valid calories.");
+
+      const arr = read(STORAGE_KEYS.workouts);
+      arr.unshift({ id: Date.now(), type, duration, calories });
+      write(STORAGE_KEYS.workouts, arr);
+
+      els.workoutDuration.value = '';
+      els.workoutCalories.value = '';
+      renderHistory();
+    });
+
+
+    // ADD CARDIO
+    els.addCardioBtn.addEventListener('click', () => {
+      const activity = els.cardioType.value;
+      const duration = Number(els.cardioDuration.value);
+      const distance = els.cardioDistance.value ? Number(els.cardioDistance.value) : null;
+      const calories = Number(els.cardioCalories.value);
+
+      if (!duration || duration <= 0) return alert("Enter duration.");
+      if (calories < 0) return alert("Enter calories.");
+
+      const arr = read(STORAGE_KEYS.cardio);
+      arr.unshift({ id: Date.now(), activity, duration, distance, calories });
+      write(STORAGE_KEYS.cardio, arr);
+
+      els.cardioDuration.value = '';
+      els.cardioDistance.value = '';
+      els.cardioCalories.value = '';
+      renderHistory();
+    });
+
+
+    // REMOVE ENTRY
+    window.removeEntry = (key, id) => {
+      const arr = read(key).filter(i => i.id !== id);
+      write(key, arr);
+      renderHistory();
+    };
+
+
+    // CLEAR ALL
+    els.clearWorkoutsBtn.addEventListener('click', () => {
+      if (confirm("Clear all workouts?")) {
+        write(STORAGE_KEYS.workouts, []);
+        renderHistory();
+      }
+    });
+    els.clearCardioBtn.addEventListener('click', () => {
+      if (confirm("Clear all cardio?")) {
+        write(STORAGE_KEYS.cardio, []);
+        renderHistory();
+      }
+    });
+
+
+    // LOGOUT — FIXED ✔
+    els.logoutBtn.addEventListener('click', () => {
+      if (confirm("Logout?")) {
+
+        // Don't remove workouts or cardio ✔
+        ['water','sleep','steps'].forEach(k => localStorage.removeItem('tracker_' + k));
+
+        localStorage.removeItem('userEmail');
+        window.location.href = "login.html";
+      }
+    });
+
+
+    // INIT
+    renderHistory();
+  </script>
+</body>
+</html>

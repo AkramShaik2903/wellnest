@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post - WellNest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            font-family: "Poppins", sans-serif;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 28px;
+            padding: 40px;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 30px 70px rgba(0,0,0,0.2);
+        }
+        
+        .top-nav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .nav-btn {
+            flex: 1;
+            padding: 14px;
+            background: rgba(102,126,234,0.2);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .nav-btn:hover { background: rgba(102,126,234,0.4); transform: translateY(-2px); }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #1e40af, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .post-form {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .form-group {
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 150px;
+            transition: all 0.3s ease;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .image-upload {
+            border: 2px dashed #d1d5db;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+        
+        .image-upload:hover {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+        
+        .image-upload.dragover {
+            border-color: #3b82f6;
+            background: #dbeafe;
+            transform: scale(1.02);
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 16px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .tag-btn {
+            padding: 8px 16px;
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tag-btn.active {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            box-shadow: 0 15px 35px rgba(59,130,246,0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+            box-shadow: 0 15px 35px rgba(107,114,128,0.4);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.2);
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        @media (max-width: 480px) {
+            .container { padding: 30px 20px; margin: 10px; }
+            .action-buttons { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-nav">
+            <a href="trainer-dashboard.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> Dashboard
+            </a>
+            <a href="posts.html" class="nav-btn">
+                <i class="fas fa-list"></i> My Posts
+            </a>
+        </div>
+
+        <div class="header">
+            <h1><i class="fas fa-edit"></i> Create Post</h1>
+            <p>Share your expertise with the community</p>
+        </div>
+
+        <form id="postForm" class="post-form">
+            <div class="form-group">
+                <label>What's your workout tip? 💪</label>
+                <textarea id="postContent" maxlength="1000" placeholder="Share a workout tip, client transformation, or motivation..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <i class="fas fa-image"></i> Add Image (Optional)
+                </label>
+                <div class="image-upload" id="imageUpload">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: #6b7280; margin-bottom: 15px;"></i>
+                    <div style="color: #374151; font-weight: 500;">Click to upload or drag & drop</div>
+                    <div style="color: #9ca3af; font-size: 0.9rem;">PNG, JPG up to 5MB</div>
+                    <img id="imagePreview" class="image-preview" alt="Preview">
+                </div>
+                <input type="file" id="imageInput" accept="image/*" style="display: none;">
+            </div>
+
+            <div class="form-group">
+                <label>Post Type</label>
+                <div class="post-tags">
+                    <button type="button" class="tag-btn active" data-type="tip">💡 Tip</button>
+                    <button type="button" class="tag-btn" data-type="transformation">🔥 Transformation</button>
+                    <button type="button" class="tag-btn" data-type="motivation">❤️ Motivation</button>
+                    <button type="button" class="tag-btn" data-type="workout">🏋️ Workout</button>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i>
+                    Publish Post
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='trainer-dashboard.html'">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </button>
+            </div>
+        </form>
+
+        <div id="successMessage" class="success-message">
+            <i class="fas fa-check-circle" style="font-size: 3rem; margin-bottom: 15px;"></i>
+            <h3>Post Published! 🎉</h3>
+            <p>Your content is now live for all clients to see</p>
+        </div>
+    </div>
+
+    <script>
+        // Image upload
+        const imageUpload = document.getElementById('imageUpload');
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+
+        imageUpload.addEventListener('click', () => imageInput.click());
+        imageInput.addEventListener('change', handleImage);
+
+        imageUpload.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            imageUpload.classList.add('dragover');
+        });
+
+        imageUpload.addEventListener('dragleave', () => {
+            imageUpload.classList.remove('dragover');
+        });
+
+        imageUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            imageUpload.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                imageInput.files = files;
+                handleImage();
+            }
+        });
+
+        function handleImage() {
+            const file = imageInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Tag selection
+        document.querySelectorAll('.tag-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // Form submission
+        document.getElementById('postForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const trainerEmail = localStorage.getItem('trainerEmail');
+            const content = document.getElementById('postContent').value.trim();
+            const postType = document.querySelector('.tag-btn.active').dataset.type;
+            const imageFile = imageInput.files[0];
+
+            if (!content || content.length < 10) {
+                alert('Please write at least 10 characters');
+                return;
+            }
+
+            try {
+                const formData = new FormData();
+                formData.append('trainerEmail', trainerEmail);
+                formData.append('content', content);
+                formData.append('type', postType);
+                if (imageFile) formData.append('image', imageFile);
+
+                const response = await fetch('http://localhost:8080/api/trainer/create-post', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    document.getElementById('successMessage').style.display = 'block';
+                    document.getElementById('postForm').style.display = 'none';
+                    setTimeout(() => window.location.href = 'posts.html', 2000);
+                }
+            } catch (error) {
+                alert('Error publishing post');
+            }
+        });
+    </script>
+</body>
+</html>

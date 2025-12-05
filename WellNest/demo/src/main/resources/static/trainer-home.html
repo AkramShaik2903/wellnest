@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Trainer Dashboard - WellNest</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root{
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --text: #0f172a;
+      --accent: #2563eb;
+      --danger: #ef4444;
+      --radius: 12px;
+      --shadow: 0 10px 30px rgba(16,24,40,0.06);
+      --max-width: 980px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#f8fafc 0%, #eef3fb 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:28px;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      min-height:100vh;
+    }
+
+    .wrap{width:100%;max-width:var(--max-width)}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}
+    .logo{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(180deg,#fff,#f1f7ff);border:1px solid rgba(37,99,235,0.06);color:var(--accent);
+      font-weight:700;font-size:1.05rem;box-shadow:0 6px 16px rgba(16,24,40,0.04)}
+    .brand .title{font-weight:700;font-size:1.02rem}
+    .brand .sub{font-size:0.78rem;color:var(--muted)}
+
+    .top-actions{display:flex;gap:10px;align-items:center}
+    .logout-btn{
+      background:var(--card);border:1px solid rgba(15,23,42,0.06);padding:10px 14px;border-radius:10px;
+      font-weight:600;color:var(--text);display:inline-flex;gap:8px;align-items:center;cursor:pointer;
+      box-shadow:0 4px 12px rgba(16,24,40,0.03)
+    }
+    .logout-btn:hover{transform:translateY(-2px)}
+    .logout-btn:focus{outline:2px solid rgba(37,99,235,0.12);outline-offset:2px}
+
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:24px;border:1px solid rgba(15,23,42,0.04)}
+    .header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+    .welcome{font-size:1.25rem;font-weight:700}
+    .sub{color:var(--muted);font-size:0.95rem}
+
+    .nav-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:16px}
+    .nav-card{
+      display:flex;flex-direction:column;gap:10px;padding:18px;border-radius:12px;
+      border:1px solid rgba(15,23,42,0.04);background:linear-gradient(180deg,#fff,#fbfdff);
+      text-decoration:none;color:inherit;box-shadow:0 8px 22px rgba(16,24,40,0.03);align-items:flex-start;
+      transition:box-shadow .15s ease,transform .15s ease;
+    }
+    .nav-card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(16,24,40,0.06)}
+    .nav-title{font-weight:700;font-size:1rem}
+    .nav-desc{color:var(--muted);font-size:0.9rem}
+
+    /* small helper */
+    .muted{color:var(--muted);font-size:0.92rem;margin-top:14px}
+
+    @media (max-width:520px){
+      body{padding:18px}
+      .nav-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" role="main" aria-label="Trainer dashboard">
+    <header class="topbar" role="banner">
+      <a class="brand" href="trainer-dashboard.html" aria-label="WellNest Trainer Home">
+        <div class="logo" aria-hidden="true">WN</div>
+        <div>
+          <div class="title">WellNest</div>
+          <div class="sub">Trainer Dashboard</div>
+        </div>
+      </a>
+
+      <div class="top-actions">
+        <button id="logoutBtn" class="logout-btn" aria-label="Logout" title="Logout">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </header>
+
+    <section class="card" aria-labelledby="welcomeHeading">
+      <div class="header">
+        <div>
+          <div id="welcomeHeading" class="welcome">Welcome, Trainer</div>
+          <div class="sub">Manage your clients, content and chats from here.</div>
+        </div>
+      </div>
+
+      <nav class="nav-grid" aria-label="Trainer actions">
+        <a class="nav-card" href="add-client.html" title="Add Client">
+          <div class="nav-title"><i class="fas fa-user-plus" style="width:20px"></i> Add Client</div>
+          <div class="nav-desc">Quickly onboard a new client and set their initial plan.</div>
+        </a>
+
+        <a class="nav-card" href="create-post.html" title="Create Post">
+          <div class="nav-title"><i class="fas fa-edit" style="width:20px"></i> Create Post</div>
+          <div class="nav-desc">Share workouts, tips and progress updates.</div>
+        </a>
+
+        <a class="nav-card" href="my-posts.html" title="My Posts">
+          <div class="nav-title"><i class="fas fa-list" style="width:20px"></i> My Posts</div>
+          <div class="nav-desc">Edit or remove posts you've created.</div>
+        </a>
+
+        <a class="nav-card" href="posts.html" title="All Posts">
+          <div class="nav-title"><i class="fas fa-th-large" style="width:20px"></i> Posts</div>
+          <div class="nav-desc">Browse all community posts and see engagement.</div>
+        </a>
+
+        <a class="nav-card" href="chat.html" title="Chats">
+          <div class="nav-title"><i class="fas fa-comments" style="width:20px"></i> Chats</div>
+          <div class="nav-desc">Open client conversations and support threads.</div>
+        </a>
+
+        <a class="nav-card" href="trainer-settings.html" title="Settings">
+          <div class="nav-title"><i class="fas fa-cog" style="width:20px"></i> Settings</div>
+          <div class="nav-desc">Manage your account preferences (optional).</div>
+        </a>
+      </nav>
+
+      <div class="muted">Tip: Use <strong>Add Client</strong> to create client profiles before messaging them.</div>
+    </section>
+  </div>
+
+  <script>
+    // Basic personalization if trainer name available in localStorage
+    document.addEventListener('DOMContentLoaded', () => {
+      const trainerName = localStorage.getItem('trainerName') || localStorage.getItem('userName');
+      if (trainerName) {
+        const el = document.getElementById('welcomeHeading');
+        el.textContent = `Welcome, ${trainerName.split(' ')[0]}`;
+      }
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('trainerEmail');
+        // optional: remove trainerName if you used it
+        // localStorage.removeItem('trainerName');
+        window.location.href = 'login.html';
+      }
+    });
+  </script>
+</body>
+</html>

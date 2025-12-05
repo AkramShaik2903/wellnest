@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>User Details - WellNest</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root{
+      --bg: #f6f8fb;
+      --card: #ffffff;
+      --muted: #6b7280;
+      --text: #0f172a;
+      --accent: #2563eb;
+      --success: #10b981;
+      --radius: 12px;
+      --shadow: 0 10px 30px rgba(16,24,40,0.06);
+      --max-width: 780px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg,#f8fafc 0%, #eef3fb 100%);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:28px;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      min-height:100vh;
+    }
+
+    .page{width:100%;max-width:var(--max-width)}
+    .topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+    .brand{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}
+    .logo{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(180deg,#fff,#f1f7ff);border:1px solid rgba(37,99,235,0.06);color:var(--accent);
+      font-weight:700;font-size:1.05rem;box-shadow:0 6px 18px rgba(16,24,40,0.04)}
+    .brand .title{font-weight:700;font-size:1.05rem}
+    .brand .sub{font-size:0.78rem;color:var(--muted)}
+
+    .top-actions{display:flex;gap:10px;align-items:center}
+    .logout-btn{
+      background:var(--card);border:1px solid rgba(15,23,42,0.06);padding:10px 14px;border-radius:10px;
+      font-weight:600;color:var(--text);display:inline-flex;gap:8px;align-items:center;cursor:pointer;
+      box-shadow:0 4px 12px rgba(16,24,40,0.03)
+    }
+    .logout-btn:focus{outline:2px solid rgba(37,99,235,0.12);outline-offset:2px}
+
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:26px;border:1px solid rgba(15,23,42,0.04)}
+    .header{display:flex;gap:18px;align-items:center;margin-bottom:14px}
+    .header-icon{width:56px;height:56px;border-radius:12px;display:grid;place-items:center;
+      background:#f3f6ff;border:1px solid rgba(37,99,235,0.04);color:var(--accent);font-size:1.3rem}
+    .title{font-size:1.25rem;font-weight:700}
+    .subtitle{font-size:0.95rem;color:var(--muted)}
+
+    form{margin-top:6px}
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px 20px;
+      margin-bottom:16px;
+    }
+
+    .field{display:flex;flex-direction:column;gap:8px}
+    label{font-weight:600;color:#111827;font-size:0.95rem;display:flex;align-items:center;gap:8px}
+    input,select{
+      width:100%;padding:12px 14px;border-radius:10px;border:1px solid #e6eefb;
+      background:transparent;font-size:1rem;color:var(--text);font-family:inherit;
+      transition:box-shadow .15s ease, border-color .15s ease;
+    }
+    input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 6px 18px rgba(37,99,235,0.06)}
+    select{appearance:none;padding-right:40px;background-image:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");background-position:right 12px center;background-repeat:no-repeat;background-size:18px}
+
+    .full-width{grid-column:1 / -1}
+    .actions{display:flex;gap:12px;margin-top:12px}
+    .btn{
+      padding:12px 18px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent),#7c3aed);
+      color:#fff;font-weight:700;cursor:pointer;font-size:1rem;display:inline-flex;align-items:center;gap:10px;
+      box-shadow:0 10px 30px rgba(37,99,235,0.08)
+    }
+    .btn.ghost{background:transparent;border:1px solid rgba(15,23,42,0.06);color:var(--text);font-weight:600}
+    .note{margin-top:12px;color:var(--muted);font-size:0.92rem}
+
+    @media (max-width:900px){
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="page" role="main" aria-label="User details">
+    <header class="topbar" role="banner">
+      <a class="brand" href="user-home.html" aria-label="WellNest Home">
+        <div class="logo" aria-hidden="true">WN</div>
+        <div>
+          <div class="title">WellNest</div>
+          <div class="sub">Smart Health &amp; Fitness</div>
+        </div>
+      </a>
+
+      <div class="top-actions">
+        <button id="logoutBtn" class="logout-btn" aria-label="Logout" title="Logout">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </header>
+
+    <section class="card" aria-labelledby="formHeading">
+      <div class="header">
+        <div class="header-icon" aria-hidden="true"><i class="fas fa-user-edit"></i></div>
+        <div>
+          <div id="formHeading" class="title">Complete your profile</div>
+          <div class="subtitle">Fill basic info to get better, personalized recommendations</div>
+        </div>
+      </div>
+
+      <form id="userForm" novalidate>
+        <div class="grid">
+          <div class="field full-width">
+            <label for="name"><i class="fas fa-user"></i>&nbsp;Full name</label>
+            <input id="name" name="name" type="text" placeholder="Enter your full name" required />
+          </div>
+
+          <div class="field">
+            <label for="age"><i class="fas fa-birthday-cake"></i>&nbsp;Age</label>
+            <input id="age" name="age" type="number" min="16" max="100" placeholder="Years" required />
+          </div>
+
+          <div class="field">
+            <label for="height"><i class="fas fa-ruler-vertical"></i>&nbsp;Height (cm)</label>
+            <input id="height" name="height" type="number" min="100" max="250" step="0.1" placeholder="cm" required />
+          </div>
+
+          <div class="field">
+            <label for="weight"><i class="fas fa-weight-hanging"></i>&nbsp;Weight (kg)</label>
+            <input id="weight" name="weight" type="number" min="30" max="300" step="0.1" placeholder="kg" required />
+          </div>
+
+          <div class="field full-width">
+            <label for="goal"><i class="fas fa-bullseye"></i>&nbsp;Fitness goal</label>
+            <select id="goal" name="goal" required>
+              <option value="" disabled selected>Select your goal</option>
+              <option value="LOSE">Lose Weight</option>
+              <option value="GAIN">Gain Muscle</option>
+              <option value="MAINTAIN">Regular Maintenance</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn" id="saveBtn"><i class="fas fa-save"></i> Save & Continue</button>
+          <a href="user-home.html" class="btn ghost" id="cancelBtn"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        </div>
+
+        <div class="note" id="msg" aria-live="polite" style="display:none"></div>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      const apiSave = "http://localhost:8080/api/auth/save-details";
+      const apiGet = "http://localhost:8080/api/user/details";
+
+      const nameEl = document.getElementById('name');
+      const ageEl = document.getElementById('age');
+      const heightEl = document.getElementById('height');
+      const weightEl = document.getElementById('weight');
+      const goalEl = document.getElementById('goal');
+      const saveBtn = document.getElementById('saveBtn');
+      const msgEl = document.getElementById('msg');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      // Require login
+      const emailStored = localStorage.getItem('userEmail');
+      if (!emailStored) {
+        alert('Please log in to continue');
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Prefill fields if backend returns data (or from localStorage fallback)
+      async function loadProfile() {
+        // show email-based fallback name if present in storage
+        const storedName = localStorage.getItem('userName');
+        if (storedName) nameEl.value = storedName;
+
+        try {
+          const res = await fetch(`${apiGet}?email=${encodeURIComponent(emailStored)}`);
+          if (!res.ok) {
+            // don't block user — keep local values
+            console.warn('Profile GET returned', res.status);
+            return;
+          }
+          const user = await res.json();
+
+          // adapt to likely shapes (user.name or user.data.name)
+          const payload = (user && typeof user === 'object' && (user.name || user.data || user.user)) ? user : {};
+          // Try a few common property shapes:
+          const src = payload.data || payload.user || payload || {};
+
+          if (src.name) nameEl.value = src.name;
+          if (src.age != null) ageEl.value = src.age;
+          if (src.height != null) heightEl.value = src.height;
+          if (src.weight != null) weightEl.value = src.weight;
+          if (src.goal) goalEl.value = src.goal;
+        } catch (err) {
+          console.warn('Could not fetch profile data:', err);
+        }
+      }
+
+      // Validate minimal client-side
+      function validate() {
+        if (!nameEl.value.trim()) return 'Please enter your name';
+        if (!ageEl.value || ageEl.value < 16) return 'Enter a valid age (>=16)';
+        if (!heightEl.value || heightEl.value <= 0) return 'Enter a valid height';
+        if (!weightEl.value || weightEl.value <= 0) return 'Enter a valid weight';
+        if (!goalEl.value) return 'Please select a fitness goal';
+        return null;
+      }
+
+      // Submit handler
+      document.getElementById('userForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        msgEl.style.display = 'none';
+        const err = validate();
+        if (err) {
+          msgEl.style.display = 'block';
+          msgEl.style.color = '#b91c1c';
+          msgEl.textContent = err;
+          return;
+        }
+
+        const payload = {
+          email: emailStored,
+          name: nameEl.value.trim(),
+          age: Number(ageEl.value),
+          height: Number(heightEl.value),
+          weight: Number(weightEl.value),
+          goal: goalEl.value
+        };
+
+        // Disable button while saving
+        saveBtn.disabled = true;
+        const originalText = saveBtn.innerHTML;
+        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+        try {
+          const res = await fetch(apiSave, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          // handle common json shapes
+          let result;
+          try { result = await res.json(); } catch (parseErr) { result = null; }
+
+          if (res.ok && (result === null || result.success === true || result.status === 'ok' || result.saved)) {
+            // store some quick-access values locally for other pages
+            localStorage.setItem('userName', payload.name);
+            // show success and redirect
+            msgEl.style.display = 'block';
+            msgEl.style.color = varOr('#0f5132', '#0f5132'); // fallback handled below
+            msgEl.textContent = 'Saved successfully — redirecting to home...';
+
+            // small delay to let user see message
+            setTimeout(() => { window.location.href = 'user-home.html'; }, 900);
+          } else {
+            // backend returned error or JSON with message
+            const serverMsg = (result && (result.message || result.error)) ? (result.message || result.error) : `Save failed (${res.status})`;
+            msgEl.style.display = 'block';
+            msgEl.style.color = '#b91c1c';
+            msgEl.textContent = serverMsg;
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = originalText;
+          }
+        } catch (networkErr) {
+          msgEl.style.display = 'block';
+          msgEl.style.color = '#b91c1c';
+          msgEl.textContent = 'Network error. Please try again.';
+          console.error('Save error:', networkErr);
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = originalText;
+        }
+      });
+
+      // Logout
+      logoutBtn.addEventListener('click', () => {
+        if (confirm('Are you sure you want to logout?')) {
+          localStorage.removeItem('userEmail');
+          ['water','sleep','steps','workouts','cardio'].forEach(k => localStorage.removeItem('tracker_'+k));
+          window.location.href = 'login.html';
+        }
+      });
+
+      // helper for safe color (small compatibility helper)
+      function varOr(value, fallback) {
+        // attempt to use CSS variable if present; browsers here don't allow reading CSS var easily without computed styles,
+        // so just return fallback when necessary. Keep function to avoid linter noise in templates.
+        return fallback || value;
+      }
+
+      // Initialize
+      loadProfile();
+    })();
+  </script>
+</body>
+</html>

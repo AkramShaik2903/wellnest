@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Posts - WellNest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            font-family: "Poppins", sans-serif;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.95);
+            border-radius: 28px;
+            padding: 40px;
+            backdrop-filter: blur(25px);
+        }
+        
+        .top-nav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .nav-btn {
+            padding: 14px 24px;
+            background: rgba(102,126,234,0.2);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-btn:hover { background: rgba(102,126,234,0.4); transform: translateY(-2px); }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #1e40af, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .stats-row {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 20px;
+            background: rgba(59,130,246,0.1);
+            border-radius: 16px;
+            min-width: 120px;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+        
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .posts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .post-card {
+            border-radius: 20px;
+            padding: 25px;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-left: 5px solid #3b82f6;
+            transition: all 0.3s ease;
+        }
+        
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .post-type {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .post-date {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        
+        .post-content {
+            color: #1f2937;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+        
+        .post-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .post-stats {
+            display: flex;
+            gap: 25px;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .edit-btn { background: #3b82f6; color: white; }
+        .delete-btn { background: #ef4444; color: white; }
+        
+        .action-btn:hover { transform: translateY(-2px); }
+        
+        .no-posts {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+        
+        .no-posts i { font-size: 4rem; margin-bottom: 20px; opacity: 0.5; }
+        
+        @media (max-width: 768px) {
+            .container { padding: 30px 20px; margin: 10px; }
+            .stats-row { gap: 20px; }
+            .post-stats { flex-direction: column; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-nav">
+            <a href="trainer-dashboard.html" class="nav-btn">
+                <i class="fas fa-arrow-left"></i> Dashboard
+            </a>
+            <a href="create-post.html" class="nav-btn">
+                <i class="fas fa-plus"></i> New Post
+            </a>
+        </div>
+
+        <div class="header">
+            <h1><i class="fas fa-list"></i> My Posts</h1>
+            <p>Manage your content and track engagement</p>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat">
+                <div class="stat-number" id="totalPosts">12</div>
+                <div class="stat-label">Total Posts</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="totalViews">2.4K</div>
+                <div class="stat-label">Total Views</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="avgEngagement">87%</div>
+                <div class="stat-label">Avg Engagement</div>
+            </div>
+        </div>
+
+        <div class="posts-list" id="postsList">
+            <!-- Dynamic posts loaded here -->
+        </div>
+    </div>
+
+    <script>
+        async function loadPosts() {
+            try {
+                const trainerEmail = localStorage.getItem('trainerEmail');
+                const response = await fetch(`http://localhost:8080/api/trainer/posts?trainerEmail=${trainerEmail}`);
+                const posts = await response.json();
+                
+                const postsList = document.getElementById('postsList');
+                if (posts.length === 0) {
+                    postsList.innerHTML = `
+                        <div class="no-posts">
+                            <i class="fas fa-feather-alt"></i>
+                            <h3>No posts yet</h3>
+                            <p>Create your first post to share with clients</p>
+                            <a href="create-post.html" class="btn" style="margin-top: 20px; display: inline-block; padding: 15px 30px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; border-radius: 20px; text-decoration: none;">Create First Post</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                postsList.innerHTML = posts.map(post => `
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="post-type" style="background: ${getTypeColor(post.type)}">${getTypeEmoji(post.type)}</div>
+                            <div class="post-date">${new Date(post.createdAt).toLocaleDateString()}</div>
+                        </div>
+                        <div class="post-content">${post.content}</div>
+                        ${post.imageUrl ? `<img src="${post.imageUrl}" class="post-image" alt="Post image">` : ''}
+                        <div class="post-stats">
+                            <div><i class="fas fa-eye"></i> ${post.views || 0} views</div>
+                            <div><i class="fas fa-heart"></i> ${post.likes || 0} likes</div>
+                            <div><i class="fas fa-comment"></i> ${post.comments || 0} comments</div>
+                        </div>
+                        <div class="post-actions">
+                            <a href="edit-post.html?id=${post.id}" class="action-btn edit-btn">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <button class="action-btn delete-btn" onclick="deletePost('${post.id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                document.getElementById('postsList').innerHTML = '<div style="text-align: center; padding: 40px; color: #6b7280;">Error loading posts</div>';
+            }
+        }
+
+        function getTypeColor(type) {
+            const colors = {
+                'tip': '#3b82f6',
+                'transformation': '#10b981',
+                'motivation': '#f59e0b',
+                'workout': '#8b5cf6'
+            };
+            return colors[type] || '#6b7280';
+        }
+
+        function getTypeEmoji(type) {
+            const emojis = {
+                'tip': '💡',
+                'transformation': '🔥',
+                'motivation': '❤️',
+                'workout': '🏋️'
+            };
+            return emojis[type] || '📝';
+        }
+
+        async function deletePost(postId) {
+            if (confirm('Delete this post?')) {
+                try {
+                    await fetch(`http://localhost:8080/api/trainer/delete-post/${postId}`, { method: 'DELETE' });
+                    loadPosts();
+                } catch (error) {
+                    alert('Error deleting post');
+                }
+            }
+        }
+
+        // Load posts on page load
+        loadPosts();
+    </script>
+</body>
+</html>

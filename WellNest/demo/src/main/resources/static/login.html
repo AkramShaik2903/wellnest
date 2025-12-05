@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WellNest Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="card page-flip">
+            <h2 class="title">WellNest</h2>
+            <p class="subtitle">Smart Health & Fitness Companion</p>
+
+            <form id="loginForm">
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+
+                <button type="submit" class="btn">Login</button>
+
+                <p class="signup-text">
+                    Don't have an account? <a href="signup.html">Create Account</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+<script>
+document.getElementById("loginForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if (!email || !password) {
+        alert("Please fill all fields");
+        return;
+    }
+
+    const res = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ email, password })
+    });
+
+    const result = await res.json();
+    console.log("LOGIN RESPONSE:", result);
+
+    if (!result.success) {
+        alert(result.message);
+        return;
+    }
+
+    // Save email for future use
+    localStorage.setItem("userEmail", email);
+
+    // Redirect Logic
+    const role = result.role;
+    const detailsDone = result.detailsCompleted;
+
+    if (role === "TRAINER") {
+        window.location.href = "trainer-home.html";
+        return;
+    }
+
+    if (role === "USER") {
+        if (detailsDone === false) {
+            window.location.href = "user-details.html";
+        } else {
+            window.location.href = "user-home.html";
+        }
+    }
+});
+</script>
+
+</body>
+</html>

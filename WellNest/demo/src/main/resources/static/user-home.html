@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>User Home - WellNest</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root{
+      --bg-1: #f6f8fb;
+      --card-bg: #ffffff;
+      --muted: #6b7280;
+      --primary: #0f172a;
+      --accent: #2563eb;
+      --surface-shadow: 0 6px 18px rgba(20, 20, 30, 0.06);
+      --radius: 12px;
+      --max-width: 980px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+      color:var(--primary);
+      padding:28px;
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      min-height:100vh;
+    }
+
+    .page {
+      width:100%;
+      max-width:var(--max-width);
+    }
+
+    /* Top navigation */
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:20px;
+    }
+
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:12px;
+      text-decoration:none;
+      color:inherit;
+    }
+
+    .brand .logo {
+      width:48px;
+      height:48px;
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg, #ffffff, #eef6ff);
+      border:1px solid rgba(37,99,235,0.08);
+      box-shadow:var(--surface-shadow);
+      font-weight:700;
+      color:var(--accent);
+    }
+
+    .logout-btn{
+      background:var(--card-bg);
+      border:1px solid rgba(15,23,42,0.06);
+      padding:10px 14px;
+      border-radius:10px;
+      font-weight:600;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      box-shadow:0 4px 12px rgba(16,24,40,0.03);
+    }
+
+    /* Main user card */
+    .main-card{
+      background:var(--card-bg);
+      border-radius:var(--radius);
+      padding:22px;
+      box-shadow:var(--surface-shadow);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:22px;
+    }
+
+    .profile {
+      display:flex;
+      gap:16px;
+      align-items:center;
+    }
+
+    .avatar {
+      width:76px;
+      height:76px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#fff;
+      border:1px solid rgba(15,23,42,0.06);
+      font-size:28px;
+      font-weight:700;
+      color:var(--accent);
+    }
+
+    .greeting {
+      font-size:1.1rem;
+      font-weight:700;
+    }
+
+    .user-email {
+      font-size:0.92rem;
+      color:var(--muted);
+      max-width:400px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+
+    /* Action Cards */
+    .cards {
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:16px;
+    }
+
+    .card {
+      background:white;
+      border-radius:10px;
+      padding:16px;
+      border:1px solid rgba(15,23,42,0.04);
+      box-shadow:0 6px 18px rgba(16,24,40,0.03);
+      text-decoration:none;
+      color:inherit;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      transition:0.2s ease;
+    }
+
+    .card:hover {
+      transform:translateY(-4px);
+      box-shadow:0 14px 34px rgba(16,24,40,0.06);
+    }
+
+    .icon {
+      width:44px;
+      height:44px;
+      border-radius:10px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:#f1f5ff;
+      border:1px solid rgba(15,23,42,0.04);
+      font-size:18px;
+      color:var(--accent);
+    }
+
+    /* Quick Add Section */
+    .quick-add {
+      margin-top:24px;
+      background:white;
+      padding:20px;
+      border-radius:12px;
+      box-shadow:var(--surface-shadow);
+    }
+
+    .quick-box {
+      margin-bottom:18px;
+      background:#f8fafc;
+      padding:16px;
+      border-radius:12px;
+      border:1px solid #e2e8f0;
+      transition:0.2s ease;
+    }
+
+    .quick-box:hover {
+      transform:translateY(-3px);
+      box-shadow:0 8px 20px rgba(0,0,0,0.06);
+    }
+
+    .qb-title {
+      font-weight:600;
+      margin-bottom:10px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    .qb-counter {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:white;
+      padding:10px 16px;
+      border-radius:10px;
+      border:1px solid #cbd5e1;
+      margin-bottom:10px;
+    }
+
+    .qb-counter button {
+      width:38px;
+      height:38px;
+      border-radius:10px;
+      font-size:1.2rem;
+      font-weight:700;
+      border:none;
+      background:#2563eb;
+      color:white;
+      cursor:pointer;
+      transition:0.2s ease;
+    }
+
+    .qb-counter button:hover {
+      background:#1d4ed8;
+    }
+
+    .qb-counter span {
+      width:70px;
+      text-align:center;
+      font-size:1.2rem;
+      font-weight:600;
+    }
+
+    .qb-save {
+      width:100%;
+      padding:12px;
+      background:#2563eb;
+      color:white;
+      border:none;
+      border-radius:10px;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.2s ease;
+    }
+
+    .qb-save:hover {
+      background:#1e3a8a;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- Top Bar -->
+    <header class="topbar">
+      <a class="brand" href="user-home.html">
+        <div class="logo">WN</div>
+        <div>
+          <div class="title" style="font-weight:700;">WellNest</div>
+          <div style="font-size:0.78rem;color:var(--muted)">Smart Health & Fitness</div>
+        </div>
+      </a>
+
+      <button id="logoutBtn" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </header>
+
+    <!-- Main Profile Card -->
+    <section class="main-card">
+      <div class="profile">
+        <div class="avatar" id="avatarEl">--</div>
+        <div>
+          <div class="greeting">Welcome back, <span id="userNameDisplay">User</span></div>
+          <div class="user-email" id="userEmail">--</div>
+        </div>
+      </div>
+
+      <a href="user-profile.html" class="logout-btn" style="gap:6px;">
+        <i class="fas fa-id-card"></i> Profile
+      </a>
+    </section>
+
+    <!-- Action Cards -->
+    <nav class="cards">
+      <a class="card" href="track-food.html">
+        <div class="icon"><i class="fas fa-apple-alt"></i></div>
+        <div class="title">Track Food</div>
+        <div class="subtitle">Log meals & calories</div>
+      </a>
+
+      <a class="card" href="track-workout.html">
+        <div class="icon"><i class="fas fa-dumbbell"></i></div>
+        <div class="title">Track Workouts</div>
+        <div class="subtitle">Record training sessions</div>
+      </a>
+
+      <a class="card" href="user-profile.html">
+        <div class="icon"><i class="fas fa-chart-line"></i></div>
+        <div class="title">Profile & Stats</div>
+        <div class="subtitle">View progress & goals</div>
+      </a>
+    </nav>
+
+    <!-- Quick Add Section -->
+    <section class="quick-add">
+      <h3 style="margin-bottom:12px;font-weight:700;">Quick Add</h3>
+
+      <!-- Sleep -->
+      <div class="quick-box">
+        <div class="qb-title"><i class="fas fa-bed"></i> Sleep (hrs)</div>
+        <div class="qb-counter">
+          <button onclick="changeValue('sleep', -0.5)">−</button>
+          <span id="sleepValue">0</span>
+          <button onclick="changeValue('sleep', 0.5)">+</button>
+        </div>
+        <button class="qb-save" onclick="saveQuick('sleep')">Save Sleep</button>
+      </div>
+
+      <!-- Water -->
+      <div class="quick-box">
+        <div class="qb-title"><i class="fas fa-tint"></i> Water (glasses)</div>
+        <div class="qb-counter">
+          <button onclick="changeValue('water', -1)">−</button>
+          <span id="waterValue">0</span>
+          <button onclick="changeValue('water', 1)">+</button>
+        </div>
+        <button class="qb-save" onclick="saveQuick('water')">Save Water</button>
+      </div>
+
+      <!-- Steps -->
+      <div class="quick-box">
+        <div class="qb-title"><i class="fas fa-shoe-prints"></i> Steps</div>
+        <div class="qb-counter">
+          <button onclick="changeValue('steps', -500)">−</button>
+          <span id="stepsValue">0</span>
+          <button onclick="changeValue('steps', 500)">+</button>
+        </div>
+        <button class="qb-save" onclick="saveQuick('steps')">Save Steps</button>
+      </div>
+
+    </section>
+
+  </div>
+
+  <script>
+    // Load user details on page load
+    document.addEventListener("DOMContentLoaded", async () => {
+      const email = localStorage.getItem("userEmail");
+      if (!email) return;
+
+      document.getElementById("userEmail").innerText = email;
+
+      try {
+        const res = await fetch(`http://localhost:8080/api/user/details?email=${email}`);
+        if (res.ok) {
+          const user = await res.json();
+          document.getElementById("userNameDisplay").innerText = user.name || "User";
+
+          const initials = user.name
+            ? user.name.split(" ").map(x => x[0]).join("").substring(0,2).toUpperCase()
+            : "--";
+
+          document.getElementById("avatarEl").innerText = initials;
+        }
+      } catch {}
+    });
+
+    // Logout
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      if (confirm("Logout?")) {
+        localStorage.clear();
+        window.location.href = "login.html";
+      }
+    });
+
+    // Counter handling
+    function changeValue(type, amount) {
+      const el = document.getElementById(type + "Value");
+      let val = parseFloat(el.innerText);
+      val += amount;
+      if (val < 0) val = 0;
+      el.innerText = val.toFixed(type === "sleep" ? 1 : 0);
+    }
+
+    // Save Quick Add
+    function saveQuick(type) {
+      const el = document.getElementById(type + "Value");
+      let value = parseFloat(el.innerText);
+
+      if (value <= 0) {
+        alert("Enter a valid value");
+        return;
+      }
+
+      const key = "tracker_" + type;
+      const data = JSON.parse(localStorage.getItem(key) || "[]");
+
+      data.push({
+        id: Date.now(),
+        value
+      });
+
+      localStorage.setItem(key, JSON.stringify(data));
+
+      el.innerText = "0";
+      alert(type.charAt(0).toUpperCase() + type.slice(1) + " added!");
+    }
+  </script>
+</body>
+</html>
